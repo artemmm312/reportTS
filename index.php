@@ -3,13 +3,54 @@
 <?php
 
 \Bitrix\Main\Loader::includeModule('tasks');
+\Bitrix\Main\Loader::includeModule('crm');
 
-$task = CTasks::GetList([], ['ID' => 58195], ['*', 'UF_*'], false, []);
-$test = [];
-while ($row = $task->Fetch()) {
-$test[] = $row;
+$date = date("d.m.Y H:i:s");
+$rangeWeek = [];
+$timestamp = strtotime($date);
+$week = strftime('%u', $timestamp);
+$rangeWeek['startDate'] = date('d.m.Y 00:00:00', $timestamp - ($week - 1) * 86400);
+$rangeWeek['endDate'] = date('d.m.Y 23:59:59', $timestamp + (7 - $week) * 86400);
+
+var_dump($rangeWeek['startDate']);
+var_dump($rangeWeek['endDate']);
+$tasksData = [];
+$tasks = CTasks::GetList(
+	['CREATED_DATE' => 'desc'],
+	['UF_CRM_TASK' => ['CO_299'], 'GROUP_ID' => 42, '>=CREATED_DATE' => $rangeWeek['startDate'], '<=CREATED_DATE' => $rangeWeek['endDate']],
+	['*', 'UF_CRM_TASK'],
+	false,
+	[]
+);
+while ($record = $tasks->Fetch()) {
+	//$tasksData[] = $record;
+	$company = CCrmCompany::GetList([], ['ID' => substr($record['UF_CRM_TASK'][0], 3)], ['TITLE'], false)->Fetch();
+	if ($company['TITLE'] !== null) {
+        $record += ['Компания' => $company['TITLE']];
+		$tasksData[] = $record;
+	}
 }
-var_dump($test);
+var_dump($tasksData);
+
+function multi_unique_and_count(array $array, $key) {
+	$count_for_key = array_count_values(array_column($array, $key));
+	$temp_array = array();
+	$key_array = array();
+	$i = 0;
+	foreach($array as $arr) {
+		if (!in_array($arr[$key], $key_array, true)) {
+			$key_array[$i] = $arr[$key];
+			$arr += ['count' => $count_for_key[$arr[$key]]];
+			$temp_array[$i] = $arr;
+		}
+		$i++;
+	}
+	return array_values($temp_array);
+}
+
+
+$lastTasks = multi_unique_and_count($tasksData, 'Компания');
+//var_dump($lastTasks);
 ?>
 <!doctype html>
 <html lang="ru">
