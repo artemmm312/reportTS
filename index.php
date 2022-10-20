@@ -1,6 +1,16 @@
 <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php"); ?>
 
+<?php
 
+\Bitrix\Main\Loader::includeModule('tasks');
+
+$task = CTasks::GetList([], ['ID' => 58195], ['*', 'UF_*'], false, []);
+$test = [];
+while ($row = $task->Fetch()) {
+$test[] = $row;
+}
+var_dump($test);
+?>
 <!doctype html>
 <html lang="ru">
 <head>
