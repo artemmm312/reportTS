@@ -11,7 +11,10 @@ $(document).ready(function () {
 		},
 		'columns': [
 			{data: 'Компания', title: 'Название компании'},
-			{data: 'count', title: 'Кол-во обращений'},
+			{data: 'thisTotal', title: 'Текущая неделя'},
+			{data: '-1weekTotal', title: 'Неделю назад'},
+			{data: '-2weekTotal', title: 'Две недели назад'},
+			{data: '-3weekTotal', title: 'Три недели назад'},
 			{data: 'Дата создания', title: 'Дата создания последней задачи'},
 		],
 		"order": [[1, 'desc']],
