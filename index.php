@@ -2,7 +2,7 @@
 
 <?php
 
-\Bitrix\Main\Loader::includeModule('tasks');
+/*\Bitrix\Main\Loader::includeModule('tasks');
 \Bitrix\Main\Loader::includeModule('crm');
 
 $date = date("d.m.Y H:i:s");
@@ -44,50 +44,23 @@ while ($record = $tasks->Fetch()) {
 	}
 }
 
-function getTaskForWeek (array $tasksData, array $dateRange) {
-    $result = [];
+function getTaskForWeek(array $tasksData, array $dateRange)
+{
+	$result = [];
 	foreach ($tasksData as $task => $data) {
-		if (date("Y.m.d H:i:s",strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s",strtotime($dateRange['startDate'])) &&
-			date("Y.m.d H:i:s",strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s",strtotime($dateRange['endDate']))) {
-            $result[] = $data;
+		if (date("Y.m.d H:i:s", strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s", strtotime($dateRange['startDate'])) &&
+			date("Y.m.d H:i:s", strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s", strtotime($dateRange['endDate']))) {
+			$result[] = $data;
 		}
 	}
-    return $result;
+	return $result;
 }
 
+$tasks_thisWeek = getTaskForWeek($tasksData, $thisWeekRange);
+$tasks_minus1Week = getTaskForWeek($tasksData, $minus1WeekRange);
+$tasks_minus2Week = getTaskForWeek($tasksData, $minus2WeekRange);
+$tasks_minus3Week = getTaskForWeek($tasksData, $minus3WeekRange);
 
-$tasks_thisWeek = [];
-foreach ($tasksData as $task => $data) {
-	if (date("Y.m.d H:i:s",strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s",strtotime($thisWeekRange['startDate'])) &&
-      date("Y.m.d H:i:s",strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s",strtotime($thisWeekRange['endDate']))) {
-		$tasks_thisWeek[] = $data;
-	}
-}
-
-$tasks_minus1Week = [];
-foreach ($tasksData as $task => $data) {
-	if (date("Y.m.d H:i:s",strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s",strtotime($minus1WeekRange['startDate'])) &&
-      date("Y.m.d H:i:s",strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s",strtotime($minus1WeekRange['endDate']))) {
-		$tasks_minus1Week[] = $data;
-	}
-}
-
-$tasks_minus2Week = [];
-foreach ($tasksData as $task => $data) {
-	if (date("Y.m.d H:i:s",strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s",strtotime($minus2WeekRange['startDate'])) &&
-      date("Y.m.d H:i:s",strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s",strtotime($minus2WeekRange['endDate']))) {
-		$tasks_minus2Week[] = $data;
-	}
-}
-
-$tasks_minus3Week = [];
-foreach ($tasksData as $task => $data) {
-	if (date("Y.m.d H:i:s",strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s",strtotime($minus3WeekRange['startDate'])) &&
-			date("Y.m.d H:i:s",strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s",strtotime($minus3WeekRange['endDate']))) {
-		$tasks_minus3Week[] = $data;
-	}
-}
-//var_dump($tasks_minus3Week);
 
 function multi_unique_and_count(array $array, $key)
 {
@@ -104,9 +77,9 @@ function multi_unique_and_count(array $array, $key)
 		$i++;
 	}
 	return array_values($temp_array);
-}
+}*/
 
-function multi_unique(array $array, $key)
+/*function multi_unique(array $array, $key)
 {
 	$temp_array = array();
 	$key_array = array();
@@ -119,19 +92,33 @@ function multi_unique(array $array, $key)
 		$i++;
 	}
 	return array_values($temp_array);
-}
+}*/
 
-$tasks_thisWeek = multi_unique_and_count($tasks_thisWeek, 'Компания');
-//var_dump($tasks_thisWeek);
-/*$tasks_minus1Week = multi_unique($tasks_minus1Week, 'Компания');
-$tasks_minus2Week = multi_unique($tasks_minus2Week, 'Компания');
-$tasks_minus3Week = multi_unique($tasks_minus3Week, 'Компания');*/
+//$tasks_thisWeek = multi_unique_and_count($tasks_thisWeek, 'Компания');
 
-$result = $tasks_thisWeek;
-//var_dump($result);
+//$result = $tasks_thisWeek;
 
+/*function unionDataWeek (array $tasks_for_week, $key, array $result) {
+	$count_for_key = array_count_values(array_column($tasks_for_week, $key));
+	foreach ($count_for_key as $comp => $value) {
+		if (in_array($comp, array_column($result, 'Компания'), true)) {
+			$index = array_search($comp, array_column($result, 'Компания'), true);
+			$result[$index]['-1weekTotal'] = $value;
+		} else {
+			$j = array_search($comp, array_column($tasks_for_week, 'Компания'), true);
+			$result[] = ['ID' => $tasks_for_week[$j]['ID'],
+				'Компания' => $tasks_for_week[$j]['Компания'],
+				'Дата создания' => $tasks_for_week[$j]['Дата создания'],
+				'thisTotal' => 0,
+				'-1weekTotal' => $value,
+				'-2weekTotal' => 0,
+				'-3weekTotal' => 0];
+		}
+	}
+    return $result;
+}*/
 
-$count_for_key1 = array_count_values(array_column($tasks_minus1Week, 'Компания'));
+/*$count_for_key1 = array_count_values(array_column($tasks_minus1Week, 'Компания'));
 foreach ($count_for_key1 as $comp => $value) {
 	if (in_array($comp, array_column($result, 'Компания'), true)) {
 		$index = array_search($comp, array_column($result, 'Компания'), true);
@@ -178,7 +165,7 @@ foreach ($count_for_key3 as $comp => $value) {
 			'-2weekTotal' => 0,
 			'-3weekTotal' => $value];
 	}
-}
+}*/
 
 //var_dump($result);
 
@@ -207,6 +194,18 @@ foreach ($count_for_key3 as $comp => $value) {
     <body>
     <div class="container">
         <table id="tasksTable" class="table-hover table-bordered border border-dark"></table>
+    </div>
+    <div class="container">
+        <div class="buttons">
+            <button class="next_week"
+                    type="button">
+                Next
+            </button>
+            <button class="back_week"
+                    type="button">
+                Back
+            </button>
+        </div>
     </div>
     <script type="text/javascript" src="js/script.js"></script>
     </body>

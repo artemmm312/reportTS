@@ -12,6 +12,17 @@ $thisWeekRange = [];
 $thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $timestamp - ($number_day - 1) * 86400);
 $thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $timestamp + (7 - $number_day) * 86400);
 
+$week = '';
+if (!empty($_POST['week'])) {
+	$week = $_POST['week'];
+	if ($week !== '') {
+		$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $week['startDate'] / 1000);
+	}
+	if ($week !== '') {
+		$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $week['endDate'] / 1000);
+	}
+}
+
 $minus1WeekRange = [];
 $minus1WeekRange['startDate'] = date('d.m.Y 00:00:00', strtotime($thisWeekRange['startDate'] . '-1 week'));
 $minus1WeekRange['endDate'] = date('d.m.Y 23:59:59', strtotime($thisWeekRange['endDate'] . '-1 week'));
@@ -60,37 +71,7 @@ $tasks_thisWeek = getTaskForWeek($tasksData, $thisWeekRange);
 $tasks_minus1Week = getTaskForWeek($tasksData, $minus1WeekRange);
 $tasks_minus2Week = getTaskForWeek($tasksData, $minus2WeekRange);
 $tasks_minus3Week = getTaskForWeek($tasksData, $minus3WeekRange);
-/*$tasks_thisWeek = [];
-foreach ($tasksData as $task => $data) {
-	if (date("Y.m.d H:i:s", strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s", strtotime($thisWeekRange['startDate'])) &&
-		date("Y.m.d H:i:s", strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s", strtotime($thisWeekRange['endDate']))) {
-		$tasks_thisWeek[] = $data;
-	}
-}
 
-$tasks_minus1Week = [];
-foreach ($tasksData as $task => $data) {
-	if (date("Y.m.d H:i:s", strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s", strtotime($minus1WeekRange['startDate'])) &&
-		date("Y.m.d H:i:s", strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s", strtotime($minus1WeekRange['endDate']))) {
-		$tasks_minus1Week[] = $data;
-	}
-}
-
-$tasks_minus2Week = [];
-foreach ($tasksData as $task => $data) {
-	if (date("Y.m.d H:i:s", strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s", strtotime($minus2WeekRange['startDate'])) &&
-		date("Y.m.d H:i:s", strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s", strtotime($minus2WeekRange['endDate']))) {
-		$tasks_minus2Week[] = $data;
-	}
-}
-
-$tasks_minus3Week = [];
-foreach ($tasksData as $task => $data) {
-	if (date("Y.m.d H:i:s", strtotime($data['Дата создания'])) >= date("Y.m.d H:i:s", strtotime($minus3WeekRange['startDate'])) &&
-		date("Y.m.d H:i:s", strtotime($data['Дата создания'])) <= date("Y.m.d H:i:s", strtotime($minus3WeekRange['endDate']))) {
-		$tasks_minus3Week[] = $data;
-	}
-}*/
 
 function multi_unique_and_count(array $array, $key)
 {
@@ -109,7 +90,7 @@ function multi_unique_and_count(array $array, $key)
 	return array_values($temp_array);
 }
 
-function multi_unique(array $array, $key)
+/*function multi_unique(array $array, $key)
 {
 	$temp_array = array();
 	$key_array = array();
@@ -122,19 +103,14 @@ function multi_unique(array $array, $key)
 		$i++;
 	}
 	return array_values($temp_array);
-}
+}*/
 
 $tasks_thisWeek = multi_unique_and_count($tasks_thisWeek, 'Компания');
-/*$tasks_minus1Week = multi_unique($tasks_minus1Week, 'Компания');
-$tasks_minus2Week = multi_unique($tasks_minus2Week, 'Компания');
-$tasks_minus3Week = multi_unique($tasks_minus3Week, 'Компания');*/
 
 $result = $tasks_thisWeek;
-//var_dump($result);
 
-
-$count_for_key1 = array_count_values(array_column($tasks_minus1Week, 'Компания'));
-foreach ($count_for_key1 as $comp => $value) {
+$totalCompanyMinus1Week = array_count_values(array_column($tasks_minus1Week, 'Компания'));
+foreach ($totalCompanyMinus1Week as $comp => $value) {
 	if (in_array($comp, array_column($result, 'Компания'), true)) {
 		$index = array_search($comp, array_column($result, 'Компания'), true);
 		$result[$index]['-1weekTotal'] = $value;
@@ -149,8 +125,9 @@ foreach ($count_for_key1 as $comp => $value) {
 			'-3weekTotal' => 0];
 	}
 }
-$count_for_key2 = array_count_values(array_column($tasks_minus2Week, 'Компания'));
-foreach ($count_for_key2 as $comp => $value) {
+
+$totalCompanyMinus2Week = array_count_values(array_column($tasks_minus2Week, 'Компания'));
+foreach ($totalCompanyMinus2Week as $comp => $value) {
 	if (in_array($comp, array_column($result, 'Компания'), true)) {
 		$index = array_search($comp, array_column($result, 'Компания'), true);
 		$result[$index]['-2weekTotal'] = $value;
@@ -165,8 +142,9 @@ foreach ($count_for_key2 as $comp => $value) {
 			'-3weekTotal' => 0];
 	}
 }
-$count_for_key3 = array_count_values(array_column($tasks_minus3Week, 'Компания'));
-foreach ($count_for_key3 as $comp => $value) {
+
+$totalCompanyMinus3Week = array_count_values(array_column($tasks_minus3Week, 'Компания'));
+foreach ($totalCompanyMinus3Week as $comp => $value) {
 	if (in_array($comp, array_column($result, 'Компания'), true)) {
 		$index = array_search($comp, array_column($result, 'Компания'), true);
 		$result[$index]['-3weekTotal'] = $value;
@@ -181,6 +159,10 @@ foreach ($count_for_key3 as $comp => $value) {
 			'-3weekTotal' => $value];
 	}
 }
-$response = ["aaData" => $result];
+
+$date = ['startDate' => date('Y-m-d H:i:s', strtotime($thisWeekRange['startDate'])),
+	'endDate' => date('Y-m-d H:i:s',strtotime($thisWeekRange['endDate']))];
+
+$response = ["aaData" => $result, "date" => $date];
 
 echo json_encode($response);
