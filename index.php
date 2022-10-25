@@ -197,12 +197,10 @@ foreach ($count_for_key3 as $comp => $value) {
     </div>
     <div class="container">
         <div class="buttons">
-            <button class="next_week"
-                    type="button">
+            <button class="next_week" type="button">
                 Next
             </button>
-            <button class="back_week"
-                    type="button">
+            <button class="back_week" type="button">
                 Back
             </button>
         </div>

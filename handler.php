@@ -9,18 +9,21 @@ $date = date("d.m.Y H:i:s");
 $timestamp = strtotime($date);
 $number_day = strftime('%u', $timestamp);
 $thisWeekRange = [];
-$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $timestamp - ($number_day - 1) * 86400);
-$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $timestamp + (7 - $number_day) * 86400);
+//$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $timestamp - ($number_day - 1) * 86400);
+//$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $timestamp + (7 - $number_day) * 86400);
 
 $week = '';
 if (!empty($_POST['week'])) {
 	$week = $_POST['week'];
-	if ($week !== '') {
-		$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $week['startDate'] / 1000);
-	}
-	if ($week !== '') {
-		$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $week['endDate'] / 1000);
-	}
+}
+if ($week !== '') {
+	$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $week['startDate'] / 1000);
+	$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $week['endDate'] / 1000);
+	//var_dump($thisWeekRange['startDate']);
+	//var_dump($thisWeekRange['endDate']);
+} else {
+	$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $timestamp - ($number_day - 1) * 86400);
+	$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $timestamp + (7 - $number_day) * 86400);
 }
 
 $minus1WeekRange = [];
@@ -160,9 +163,9 @@ foreach ($totalCompanyMinus3Week as $comp => $value) {
 	}
 }
 
-$date = ['startDate' => date('Y-m-d H:i:s', strtotime($thisWeekRange['startDate'])),
+$dateRange = ['startDate' => date('Y-m-d H:i:s', strtotime($thisWeekRange['startDate'])),
 	'endDate' => date('Y-m-d H:i:s',strtotime($thisWeekRange['endDate']))];
 
-$response = ["aaData" => $result, "date" => $date];
+$response = ["aaData" => $result, "date" => $dateRange];
 
 echo json_encode($response);
