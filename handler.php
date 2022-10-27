@@ -9,19 +9,14 @@ $date = date("d.m.Y H:i:s");
 $timestamp = strtotime($date);
 $number_day = strftime('%u', $timestamp);
 $thisWeekRange = [];
-//$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $timestamp - ($number_day - 1) * 86400);
-//$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $timestamp + (7 - $number_day) * 86400);
 
 $week = '';
 if (!empty($_POST['week'])) {
 	$week = $_POST['week'];
-	//var_dump($week);
 }
 if ($week['startDate'] !== '' && $week['endDate'] !== '') {
 	$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $week['startDate'] / 1000);
 	$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $week['endDate'] / 1000);
-	//var_dump($thisWeekRange['startDate']);
-	//var_dump($thisWeekRange['endDate']);
 } else {
 	$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $timestamp - ($number_day - 1) * 86400);
 	$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $timestamp + (7 - $number_day) * 86400);
@@ -93,21 +88,6 @@ function multi_unique_and_count(array $array, $key)
 	}
 	return array_values($temp_array);
 }
-
-/*function multi_unique(array $array, $key)
-{
-	$temp_array = array();
-	$key_array = array();
-	$i = 0;
-	foreach ($array as $arr) {
-		if (!in_array($arr[$key], $key_array, true)) {
-			$key_array[$i] = $arr[$key];
-			$temp_array[$i] = $arr;
-		}
-		$i++;
-	}
-	return array_values($temp_array);
-}*/
 
 $tasks_thisWeek = multi_unique_and_count($tasks_thisWeek, 'Компания');
 
