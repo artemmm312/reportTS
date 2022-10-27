@@ -193,19 +193,30 @@ foreach ($count_for_key3 as $comp => $value) {
     </head>
     <body>
     <div class="container">
-        <table id="tasksTable" class="table-hover table-bordered border border-dark"></table>
+        <table id="tasksTable" class="table-hover table-bordered border border-dark">
+            <thead>
+            <tr>
+                <th class="text-center">Название компании</th>
+                <th class="this_week text-center">Текущая неделя</th>
+                <th class="text-center">Неделю назад</th>
+                <th class="text-center">Две недели назад</th>
+                <th class="text-center">Три недели назад</th>
+                <th class="text-center">Дата создания последней задачи</th>
+            </tr>
+            </thead>
+        </table>
     </div>
     <div class="container">
         <div class="buttons">
-            <button class="next_week" type="button">
-                Next
+            <button class="back_week btn btn-primary" type="button">
+                Неделю назад
             </button>
-            <button class="back_week" type="button">
-                Back
+            <button class="next_week btn btn-primary" type="button">
+                Неделю вперед
             </button>
         </div>
     </div>
-    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/script.js?v=0.0.4"></script>
     </body>
     </html>
 

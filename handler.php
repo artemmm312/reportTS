@@ -15,8 +15,9 @@ $thisWeekRange = [];
 $week = '';
 if (!empty($_POST['week'])) {
 	$week = $_POST['week'];
+	//var_dump($week);
 }
-if ($week !== '') {
+if ($week['startDate'] !== '' && $week['endDate'] !== '') {
 	$thisWeekRange['startDate'] = date('d.m.Y 00:00:00', $week['startDate'] / 1000);
 	$thisWeekRange['endDate'] = date('d.m.Y 23:59:59', $week['endDate'] / 1000);
 	//var_dump($thisWeekRange['startDate']);

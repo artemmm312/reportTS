@@ -1,61 +1,26 @@
+const week = {startDate: '', endDate: ''};
 $(document).ready(function () {
 	createTable();
-
-	/*let table = $('#tasksTable').DataTable();
-	let date;
-	table.on('init', function () {
-		date = table.ajax.json().date;
-		console.log(date);
-	})
-	let week;
-
-
-	$('.next_week').on('click', function () {
-		let startDate = new Date(date.startDate);
-		let endDate = new Date(date.endDate);
-		week = {
-			'startDate': startDate.setDate(startDate.getDate() - 7),
-			'endDate': endDate.setDate(endDate.getDate() - 7)
-		};
-		console.log(week);
-		//table.ajax.reload();
-		table.destroy();
-		createTable(week);
-	});
+	console.log(week.startDate);
+	console.log(week.endDate);
+	console.log(week);
 
 	$('.back_week').on('click', function () {
-		let startDate = new Date(date.startDate);
-		let endDate = new Date(date.endDate);
-		week = {
-			'startDate': startDate.setDate(startDate.getDate() + 7),
-			'endDate': endDate.setDate(endDate.getDate() + 7)
-		};
-		console.log(week);
-		table.destroy();
-		createTable(week);
-	});*/
+		week.startDate = week.startDate.setDate(week.startDate.getDate() - 7);
+		week.endDate = week.endDate.setDate(week.endDate.getDate() - 7);
+		$('#tasksTable').DataTable().destroy();
+		createTable();
+	});
 	$('.next_week').on('click', function () {
-		$.ajax({
-			type: 'POST',
-			url: 'handler.php',
-			success: function (result) {
-				let date = JSON.parse(result).date;
-				console.log(date);
-				let startDate = new Date(date.startDate);
-				let endDate = new Date(date.endDate);
-				let week = {
-					'startDate': startDate.setDate(startDate.getDate() - 7),
-					'endDate': endDate.setDate(endDate.getDate() - 7)
-				};
-				$('#tasksTable').DataTable().destroy();
-				createTable(week);
-			},
-		});
+		week.startDate = week.startDate.setDate(week.startDate.getDate() + 7);
+		week.endDate = week.endDate.setDate(week.endDate.getDate() + 7);
+		$('#tasksTable').DataTable().destroy();
+		createTable();
 	});
 });
 
-function createTable(week) {
-	console.log(week);
+function createTable() {
+	//console.log(week);
 	$('#tasksTable').DataTable({
 		"language": {
 			"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Russian.json"
@@ -70,63 +35,27 @@ function createTable(week) {
 			//'data': function(d) {d.week = week},
 		},
 		'columns': [
-			{data: 'Компания', title: 'Название компании'},
-			{data: 'thisTotal', title: 'Текущая неделя'},
-			{data: '-1weekTotal', title: 'Неделю назад'},
-			{data: '-2weekTotal', title: 'Две недели назад'},
-			{data: '-3weekTotal', title: 'Три недели назад'},
-			{data: 'Дата создания', title: 'Дата создания последней задачи'},
+			{data: 'Компания', className: 'text-center'},
+			{data: 'thisTotal', className: 'text-center'},
+			{data: '-1weekTotal', className: 'text-center'},
+			{data: '-2weekTotal', className: 'text-center'},
+			{data: '-3weekTotal', className: 'text-center'},
+			{data: 'Дата создания', className: 'text-center'},
 		],
 		"order": [[1, 'desc']],
 		"drawCallback": function (settings) {
-			/*if (settings.json !== undefined) {
-				let date = settings.json.date;
-				let startDate = new Date(date.startDate);
-				let endDate = new Date(date.endDate);
-
-				$('.next_week').one('click', function () {
-					let week = {
-						'startDate': startDate.setDate(startDate.getDate() - 7),
-						'endDate': endDate.setDate(endDate.getDate() - 7)
-					};
-					$('#tasksTable').DataTable().destroy();
-					createTable(week);
-				});
-				$('.back_week').one('click', function () {
-					let week = {
-						'startDate': startDate.setDate(startDate.getDate() + 7),
-						'endDate': endDate.setDate(endDate.getDate() + 7)
-					};
-					console.log(week);
-					$('#tasksTable').DataTable().destroy();
-					createTable(week);
-				});
-			}*/
 		},
 		"initComplete": function (settings, json) {
-			/*				let date = json.date;
-							let startDate = new Date(date.startDate);
-							let endDate = new Date(date.endDate);
-						$('.next_week').one('click', function () {
-							let week = {
-								'startDate': startDate.setDate(startDate.getDate() - 7),
-								'endDate': endDate.setDate(endDate.getDate() - 7)
-							};
-							$('#tasksTable').ajax.reload();
-							//$('#tasksTable').DataTable().destroy();
-							createTable(week);
-							//$('#tasksTable').DataTable().clear().draw();
-						});
-						$('.back_week').one('click', function () {
-							let week = {
-								'startDate': startDate.setDate(startDate.getDate() + 7),
-								'endDate': endDate.setDate(endDate.getDate() + 7)
-							};
-							console.log(week);
-							//$('#tasksTable').DataTable().destroy();
-							createTable(week);
-							//$('#tasksTable').DataTable().clear().draw();
-						});*/
+			let date = json.date;
+			let startDate = new Date(date.startDate);
+			let endDate = new Date(date.endDate);
+			week.startDate = startDate;
+			week.endDate = endDate;
+			console.log(week);
+			$('.this_week').html("Текущая неделя " +
+				"<p style='font-size: 10px; font-style: italic; margin: 0'>" +
+				`(${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()})` +
+				"</p>");
 		},
 		"footerCallback": function (tfoot, data, start, end, display) {
 		},
